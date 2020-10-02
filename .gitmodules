@@ -1,0 +1,3 @@
+[submodule "WindowsWrappers"]
+	path = WindowsWrappers
+	url = https://github.com/lenkton/WindowsWrappers
