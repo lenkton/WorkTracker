@@ -33,9 +33,6 @@
     <ClInclude Include="WinProcLogic.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\WindowsWrappers\WindowsWrappers\GDIWrappers.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="forWork.cpp">
@@ -47,7 +44,7 @@
     <ClCompile Include="WinProcLogic.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\WindowsWrappers\WindowsWrappers\GDIWrappers.cpp">
+    <ClCompile Include="..\WindowsWrappers\WindowsWrappers\GDIWrappers.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>

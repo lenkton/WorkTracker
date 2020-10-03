@@ -75,7 +75,8 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <LibraryPath>C:\Users\Серёжа\source\repos\WindowsWrappers\WindowsWrappers;$(LibraryPath)</LibraryPath>
+    <LibraryPath>$(LibraryPath)</LibraryPath>
+    <SourcePath>$(VC_SourcePath)</SourcePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -107,11 +108,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Серёжа\source\repos\WindowsWrappers\WindowsWrappers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)\..\WindowsWrappers\WindowsWrappers;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(ProjectDir)\..\WindowsWrappers\WindowsWrappers;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -153,7 +156,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\WindowsWrappers\WindowsWrappers\GDIWrappers.h" />
     <ClInclude Include="forWork.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
@@ -162,7 +164,7 @@
     <ClInclude Include="WinProcLogic.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\WindowsWrappers\WindowsWrappers\GDIWrappers.cpp" />
+    <ClCompile Include="..\WindowsWrappers\WindowsWrappers\GDIWrappers.cpp" />
     <ClCompile Include="forWork.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="WinProcLogic.cpp" />
