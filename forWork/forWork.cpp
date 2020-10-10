@@ -189,18 +189,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case TIMER_ID_1:
 		{
-			//HDC hdc = GetDC(hWnd);
-			//static wchar_t szBuffer[20];
-			//long long time = timer.getTimeMilli();
-			//TextOut(hdc, 30, 30, szBuffer,
-			//	//std::wcsftime(szBuffer, L"%9d", timer.getTimeMilli()/th.timerTick)
-			//	//std::wcsftime(szBuffer,sizeof(szBuffer),L"",)
-			//	wsprintf(szBuffer,L"%02d:%02d:%02d,%d",int(time/3600000),int((time/60000)%60),int((time/1000)%60),int(time%1000))
-			//	);
-			//ReleaseDC(hWnd, hdc);
 			antonov::GetDCWrapper hdc(hWnd);
 			hdc.printString(TEXT_POSX, TEXT_POSY,timer.toWstring());
-
 		}break;
 		default:
 			break;
