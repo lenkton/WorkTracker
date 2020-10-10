@@ -1,5 +1,10 @@
 #include "WinProcLogic.h"
+#include "forWork.h"
 #include <Windows.h>
+#include "Timer.h"
+#include "GDIWrappers.h"
+
+extern HINSTANCE hInst;
 
 void antonov::TimerHandler::operator()()
 {

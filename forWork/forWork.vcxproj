@@ -156,6 +156,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\WindowsWrappers\WindowsWrappers\GDIWrappers.h" />
     <ClInclude Include="forWork.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Resource.h" />
