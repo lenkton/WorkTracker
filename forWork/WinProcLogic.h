@@ -5,23 +5,34 @@
 #include "forWork.h"
 #include <Windowsx.h>
 #include "Timer.h"
+#include <fstream>
 
-namespace antonov {
-	struct TimerHandler {
-		HWND hwnd;
-		const int timerTick = 10;
-		
-		bool isRunning = false;
-		void operator()();
-	};
-}
+struct TimerHandler {
+	HWND hwnd;
+	const int timerTick = 10;
+	bool isRunning = false;
+	void operator()() {
+		if (isRunning) {
+			KillTimer(hwnd, TIMER_ID_1);
+			std::wofstream results("Îò÷¸ò.txt", std::ios::app);
+			results << L"\n";
+			results.close();
+		}
+		else
+			SetTimer(hwnd, TIMER_ID_1, timerTick, NULL);
+		isRunning = !isRunning;
+	}
+};
 
 class WorkTrackerWindow : public antonov::WNDWRAPPER {
-	bool started = false;
-	POINT startPos = { 0,0 };
-	antonov::TimerHandler th = { *this };
-	antonov::Timer timer{ th };
-	HWND hwndButton=0, hwndName=0;
+	bool	started		= false;
+	POINT	startPos	= {0,0};
+	HWND	hwndButton	= 0;
+	HWND	hwndName	= 0;
+
+	         TimerHandler	th		{*this};
+	antonov::Timer			timer	{th};
+
 protected:
 	virtual LRESULT create			(CREATESTRUCT* pcs)			   override;
 	virtual LRESULT setFocus		(WPARAM wParam, LPARAM lParam) override {
@@ -43,7 +54,6 @@ protected:
 	}
 public:
 	WorkTrackerWindow(HWND _hwnd): antonov::WNDWRAPPER(_hwnd){}
-
 };
 
 //void ChangeTimerState();

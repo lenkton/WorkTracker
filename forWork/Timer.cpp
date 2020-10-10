@@ -34,15 +34,11 @@ namespace antonov {
 				).count();
 	}
 
-	std::chrono::high_resolution_clock::duration Timer::getDUR()
-	{
+	std::chrono::high_resolution_clock::duration Timer::getDUR(){
 		return (dur + std::chrono::high_resolution_clock::now() - lastStart);
 	}
 
-	Timer::~Timer()
-	{
+	Timer::~Timer(){
 		if (isRunning) change();
 	}
-
-
 }
