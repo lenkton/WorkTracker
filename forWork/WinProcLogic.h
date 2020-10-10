@@ -18,10 +18,10 @@ namespace antonov {
 
 class WorkTrackerWindow : public antonov::WNDWRAPPER {
 	bool started = false;
-	POINT startPos;
+	POINT startPos = { 0,0 };
 	antonov::TimerHandler th = { *this };
 	antonov::Timer timer{ th };
-	HWND hwndButton, hwndName;
+	HWND hwndButton=0, hwndName=0;
 protected:
 	virtual LRESULT create(CREATESTRUCT* pcs) override {
 		hwndName = CreateWindow(L"edit", NULL, WS_CHILD | WS_BORDER | WS_VISIBLE,
@@ -49,16 +49,15 @@ protected:
 		return 0;
 	}
 	virtual LRESULT commandMessage(WPARAM wParam, LPARAM lParam) override {
-		if (wParam == BTN_START) {
+
+		int wmId = LOWORD(wParam);
+
+		switch (wmId)
+		{
+		case BTN_START:
 			timer.change();
 			SetWindowText(hwndButton, (timer.isRun()) ? L"Stop" : L"Start");
 			return 0;
-		}
-		int wmId = LOWORD(wParam);
-		// Разобрать выбор в меню:
-		switch (wmId)
-		{
-
 		case IDM_ABOUT:
 			DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), *this, About);
 			break;
@@ -95,7 +94,7 @@ protected:
 	}
 
 
-		virtual LRESULT destroy(WPARAM wParam, LPARAM lParam) override {
+	virtual LRESULT destroy(WPARAM wParam, LPARAM lParam) override {
 			timer.~Timer();
 			PostQuitMessage(0);
 			return 0;
