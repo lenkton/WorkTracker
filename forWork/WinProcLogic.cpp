@@ -3,8 +3,44 @@
 #include <Windows.h>
 #include "Timer.h"
 #include "GDIWrappers.h"
+#include <chrono>
+#include <ctime> 
+#include <sstream>
 
 extern HINSTANCE hInst;
+
+void save_log(HWND hwnd, bool isStart) {
+	using std::chrono::system_clock;
+	std::time_t current_datetime = system_clock::to_time_t(
+		system_clock::now()
+	);
+	std::tm date_time;
+	localtime_s(&date_time, &current_datetime);
+
+	date_time.tm_mon += 1;
+	date_time.tm_year += 1900;
+	date_time.tm_mday;
+
+	std::wstringstream wss;
+	wss << L"Отчёт за "
+		<< date_time.tm_mday << L'.'
+		<< date_time.tm_mon  << L'.'
+		<< date_time.tm_year << L".csv";
+
+	std::wofstream results(wss.str(), std::ios::app);
+	auto len = GetWindowTextLength(hwnd) + 1;
+	wchar_t* buf = new wchar_t[len];
+	GetWindowText(hwnd, buf, len);
+
+	results << buf << L";" << (isStart ? L"начало;" : L"конец;")
+		<< date_time.tm_hour << L';'
+		<< date_time.tm_min << L';'
+		<< date_time.tm_sec << L";\n";
+
+	results.close();
+	delete[]buf;
+}
+
 
 LRESULT WorkTrackerWindow::create(CREATESTRUCT* pcs)
 {
@@ -41,6 +77,7 @@ LRESULT WorkTrackerWindow::commandMessage(WPARAM wParam, LPARAM lParam)
 	case BTN_START:
 		timer.change();
 		SetWindowText(hwndButton, (timer.isRun()) ? L"Stop" : L"Start");
+		save_log(*this,timer.isRun());
 		return 0;
 	case IDM_ABOUT:
 		DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), *this, About);

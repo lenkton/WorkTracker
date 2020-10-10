@@ -2,26 +2,24 @@
 #include "Timer.h"
 namespace antonov {
 	
-
-	
 	void Timer::change()
 	{
 		beenUsed = true;
 		if (isRunning) {
 			dur +=	
-				(std::chrono::high_resolution_clock::now() - lastStart);
+				(Timer::clock::now() - Timer::lastStart);
 		}
 		else {
-			lastStart = std::chrono::high_resolution_clock::now();
+			lastStart = Timer::clock::now();
 		}
 		onChange();
 		isRunning = !isRunning;
 	}
 
-	Timer::Timer(std::function<void()> f) : 
-		onChange(f) ,
-		lastStart(std::chrono::high_resolution_clock::now()),
-		dur(std::chrono::high_resolution_clock::duration(0)),
+	Timer::Timer(std::function<void()> f) :
+		onChange(f),
+		lastStart(Timer::clock::now()),
+		dur(),
 		isRunning(false)
 	{}
 
@@ -29,16 +27,29 @@ namespace antonov {
 	{
 		return std::chrono::duration_cast<std::chrono::milliseconds>
 			(dur +	
-				std::chrono::high_resolution_clock::now() 
+				Timer::clock::now()
 				- lastStart
 				).count();
 	}
 
-	std::chrono::high_resolution_clock::duration Timer::getDUR(){
-		return (dur + std::chrono::high_resolution_clock::now() - lastStart);
+	Timer::clock::duration Timer::getDUR(){
+		return (dur + Timer::clock::now() - Timer::lastStart);
 	}
 
 	Timer::~Timer(){
 		if (isRunning) change();
+	}
+	std::wstring Timer::toWstring()
+	{
+		std::wostringstream out{};
+		auto t = getTimeMilli();
+		if (!beenUsed)t = 0;
+
+		out << std::setfill(L'0')
+			<< std::setw(2) << (t / 3600000) << L":"
+			<< std::setw(2) << ((t / 60000) % 60) << L":"
+			<< std::setw(2) << ((t / 1000) % 60) << L","
+			<< std::setw(3) << (t % 1000);
+		return out.str();
 	}
 }

@@ -12,12 +12,8 @@ struct TimerHandler {
 	const int timerTick = 10;
 	bool isRunning = false;
 	void operator()() {
-		if (isRunning) {
+		if (isRunning)
 			KillTimer(hwnd, TIMER_ID_1);
-			std::wofstream results("Îò÷¸ò.txt", std::ios::app);
-			results << L"\n";
-			results.close();
-		}
 		else
 			SetTimer(hwnd, TIMER_ID_1, timerTick, NULL);
 		isRunning = !isRunning;
@@ -43,9 +39,12 @@ protected:
 	virtual LRESULT commandMessage	(WPARAM wParam, LPARAM lParam) override;
 	virtual LRESULT mouseMove		(WPARAM wParam, LPARAM lParam) override;
 	virtual LRESULT destroy			(WPARAM wParam, LPARAM lParam) override {
-			timer.~Timer();
-			PostQuitMessage(0);
-			return 0;
+		
+		if (timer.isRun())
+			SendMessage(*this, WM_COMMAND, BTN_START, 0);
+		timer.~Timer();
+		PostQuitMessage(0);
+		return 0;
 	}
 	virtual LRESULT paint			(WPARAM wParam, LPARAM lParam) {
 		this->startPaint().printString(
