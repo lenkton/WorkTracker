@@ -28,14 +28,16 @@ void save_log(HWND hwnd, bool isStart) {
 		<< date_time.tm_year << L".csv";
 
 	std::wofstream results(wss.str(), std::ios::app);
+
 	auto len = GetWindowTextLength(hwnd) + 1;
 	wchar_t* buf = new wchar_t[len];
 	GetWindowText(hwnd, buf, len);
+	std::wstring app_name{ buf };
 
-	results << buf << L";" << (isStart ? L"начало;" : L"конец;")
+	results << app_name << L";" << (isStart ? L"start;" : L"end;")
 		<< date_time.tm_hour << L';'
-		<< date_time.tm_min << L';'
-		<< date_time.tm_sec << L";\n";
+		<< date_time.tm_min  << L';'
+		<< date_time.tm_sec  << L";\n";
 
 	results.close();
 	delete[]buf;
@@ -56,12 +58,10 @@ LRESULT WorkTrackerWindow::timerMessage(WPARAM wParam, LPARAM lParam)
 {
 	switch (wParam)
 	{
-	case TIMER_ID_1:
-	{
-		antonov::GetDCWrapper hdc(*this);
-		hdc.printString(TEXT_POSX, TEXT_POSY, timer.toWstring());
-	}break;
-	default:
+	case TIMER_ID_1:{
+			antonov::GetDCWrapper hdc(*this);
+			hdc.printString(TEXT_POSX, TEXT_POSY, timer.toWstring());
+		}
 		break;
 	}
 	return 0;
@@ -74,6 +74,17 @@ LRESULT WorkTrackerWindow::commandMessage(WPARAM wParam, LPARAM lParam)
 
 	switch (wmId)
 	{
+	case 1:
+		if (HIWORD(wParam) == EN_CHANGE) {
+			size_t len = 1 + SendMessage(hwndName, EM_LINELENGTH, 0, 0);
+			wchar_t* buf = new wchar_t[len];
+			buf[0] = (WORD)len;
+			SendMessage(hwndName, EM_GETLINE, 0,(LPARAM) buf);
+			buf[len-1] = L'\0';
+			SetWindowText(*this, buf);
+			delete[] buf;
+		}
+		break;
 	case BTN_START:
 		timer.change();
 		SetWindowText(hwndButton, (timer.isRun()) ? L"Stop" : L"Start");
