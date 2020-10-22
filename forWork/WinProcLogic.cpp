@@ -7,7 +7,6 @@
 #include <ctime> 
 #include <sstream>
 
-extern HINSTANCE hInst;
 
 void save_log(HWND hwnd, bool isStart) {
 	using std::chrono::system_clock;
@@ -63,13 +62,14 @@ LRESULT myStartProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
 
 LRESULT WorkTrackerWindow::create(CREATESTRUCT* pcs)
 {
-	hwndName = CreateWindow(L"edit", NULL, WS_CHILD | WS_BORDER | WS_VISIBLE,
+	hwndName = CreateWindow(L"edit", CmdLine, WS_CHILD | WS_BORDER | WS_VISIBLE,
 		30, 10, 100, 25, *this, (HMENU)1, hInst, 0);
 	hwndButton = CreateWindow(L"button", L"Start",
 		WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		30, 100, 100, 25, *this, (HMENU)BTN_START, hInst, NULL);
 	startButtonHandle = hwndButton;			//needs refactoring!
-	
+	SetWindowText(*this, CmdLine);
+
 	//overrides
 	editProc = (WNDPROC)GetWindowLongPtr(hwndName, GWLP_WNDPROC);		//This is not fully compartible to 32-bit
 	SetWindowLongPtr(hwndName, GWLP_WNDPROC, (LONG_PTR)myEditProc);
