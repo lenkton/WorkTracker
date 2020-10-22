@@ -23,10 +23,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_ int       nCmdShow)
 {
 
-	/*WorkTrackerWindow w();
-	WorkTrackerWindow* a = new WorkTrackerWindow{};
-	delete a; */
-
     UNREFERENCED_PARAMETER(hPrevInstance);
     UNREFERENCED_PARAMETER(lpCmdLine);
 

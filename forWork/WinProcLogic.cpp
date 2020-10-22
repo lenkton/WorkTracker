@@ -43,6 +43,23 @@ void save_log(HWND hwnd, bool isStart) {
 	delete[]buf;
 }
 
+WNDPROC editProc = 0;
+HWND startButtonHandle=0;		//needs refactoring, hurts incapsulation and much more
+LRESULT myEditProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	if (msg == WM_KEYDOWN && wparam == VK_RETURN) {
+		SetFocus(GetParent(hwnd));
+		SendMessage(startButtonHandle, BM_CLICK, 0, 0);		//needs refactoring
+		return 0;
+	}
+	return CallWindowProc(editProc, hwnd, msg, wparam, lparam);
+}
+
+WNDPROC startProc = 0;
+LRESULT myStartProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam) {
+	if (msg == WM_KEYDOWN && wparam == VK_RETURN) 
+		return CallWindowProc(startProc, hwnd, BM_CLICK, 0, 0);
+	return CallWindowProc(startProc, hwnd, msg, wparam, lparam);
+}
 
 LRESULT WorkTrackerWindow::create(CREATESTRUCT* pcs)
 {
@@ -51,6 +68,16 @@ LRESULT WorkTrackerWindow::create(CREATESTRUCT* pcs)
 	hwndButton = CreateWindow(L"button", L"Start",
 		WS_VISIBLE | WS_CHILD | BS_DEFPUSHBUTTON,
 		30, 100, 100, 25, *this, (HMENU)BTN_START, hInst, NULL);
+	startButtonHandle = hwndButton;			//needs refactoring!
+	
+	//overrides
+	editProc = (WNDPROC)GetWindowLongPtr(hwndName, GWLP_WNDPROC);		//This is not fully compartible to 32-bit
+	SetWindowLongPtr(hwndName, GWLP_WNDPROC, (LONG_PTR)myEditProc);
+	
+	startProc = (WNDPROC)GetWindowLongPtr(hwndButton, GWLP_WNDPROC);		//This is not fully compartible to 32-bit
+	SetWindowLongPtr(hwndButton, GWLP_WNDPROC, (LONG_PTR)myStartProc);
+
+	SetFocus(hwndName);
 	return 0;
 }
 
